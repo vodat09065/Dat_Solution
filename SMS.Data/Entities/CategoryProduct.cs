@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*
+ - Sinh vien: Vo Thanh Dat
+- MSSV: 2123110212
+- Ngay tao: 15/05/2026
+*/
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;

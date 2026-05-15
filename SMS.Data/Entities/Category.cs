@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SMS.Data.Entities
 {
-    // Thuc the
+    // Thuc the danh muc
     internal class Category
     {
         public int Id { get; set; }
