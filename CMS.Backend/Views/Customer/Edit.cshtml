@@ -1,0 +1,45 @@
+@model CMS.Data.Entities.Customer
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Edit Customer";
+}
+<h2 class="mt-4 mb-3">Edit Customer</h2>
+<form asp-action="Edit" method="post" class="needs-validation" novalidate>
+    <input type="hidden" asp-for="Id" />
+    <div class="mb-3">
+        <label class="form-label" asp-for="FullName">Full Name</label>
+        <input class="form-control" asp-for="FullName" required />
+        <div class="invalid-feedback">Please enter full name.</div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" asp-for="Email">Email</label>
+        <input class="form-control" asp-for="Email" type="email" required />
+        <div class="invalid-feedback">Please enter a valid email.</div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" asp-for="Phone">Phone</label>
+        <input class="form-control" asp-for="Phone" required />
+        <div class="invalid-feedback">Please enter phone number.</div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" asp-for="Address">Address</label>
+        <input class="form-control" asp-for="Address" />
+    </div>
+    <button type="submit" class="btn btn-success">Save</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+</form>
+<script>
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>

@@ -1,0 +1,46 @@
+@model CMS.Data.Entities.OrderDetail
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Edit Order Detail";
+}
+<h2 class="mt-4 mb-3">Edit Order Detail</h2>
+<form asp-action="Edit" method="post" class="needs-validation" novalidate>
+    <input type="hidden" asp-for="Id" />
+    <div class="mb-3">
+        <label class="form-label" asp-for="OrderId">Order</label>
+        <select class="form-select" asp-for="OrderId" asp-items="ViewBag.OrderList" required></select>
+        <div class="invalid-feedback">Please select an order.</div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" asp-for="ProductId">Product</label>
+        <select class="form-select" asp-for="ProductId" asp-items="ViewBag.ProductList" required></select>
+        <div class="invalid-feedback">Please select a product.</div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" asp-for="Quantity">Quantity</label>
+        <input class="form-control" asp-for="Quantity" type="number" min="1" required />
+        <div class="invalid-feedback">Please enter quantity.</div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" asp-for="UnitPrice">Unit Price</label>
+        <input class="form-control" asp-for="UnitPrice" type="number" step="0.01" required />
+        <div class="invalid-feedback">Please enter unit price.</div>
+    </div>
+    <button type="submit" class="btn btn-success">Save</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+</form>
+<script>
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>

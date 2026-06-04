@@ -1,0 +1,12 @@
+@model CMS.Data.Entities.Product
+@{
+    ViewData["Title"] = "Xóa sản phẩm";
+}
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<h2 class="mt-4 text-danger">Xóa sản phẩm</h2>
+<p>Bạn có chắc muốn xóa sản phẩm <strong>@Model.Name</strong>?</p>
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+</form>

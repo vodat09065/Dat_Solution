@@ -1,0 +1,12 @@
+@model CMS.Data.Entities.Customer
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Delete Customer";
+}
+<h2 class="mt-4 mb-3">Delete Customer</h2>
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <p>Are you sure you want to delete <strong>@Model.FullName</strong>?</p>
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+</form>

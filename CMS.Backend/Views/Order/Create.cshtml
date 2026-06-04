@@ -1,0 +1,39 @@
+@model CMS.Data.Entities.Order
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Create Order";
+}
+<h2 class="mt-4 mb-3">Create Order</h2>
+<form asp-action="Create" method="post" class="needs-validation" novalidate>
+    <div class="mb-3">
+        <label class="form-label" asp-for="CustomerId">Customer Id</label>
+        <input class="form-control" asp-for="CustomerId" type="number" required />
+        <div class="invalid-feedback">Please enter a customer id.</div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" asp-for="Status">Status</label>
+        <input class="form-control" asp-for="Status" type="number" required />
+        <div class="invalid-feedback">Please enter status.</div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" asp-for="Notes">Notes</label>
+        <textarea class="form-control" asp-for="Notes" rows="3"></textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Save</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+</form>
+<script>
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>

@@ -1,0 +1,39 @@
+@model CMS.Data.Entities.CategoryProduct
+@{
+    ViewData["Title"] = "Edit CategoryProduct";
+    Layout = "_LayoutAdmin";
+}
+<h2 class="mt-4 mb-3">Edit CategoryProduct</h2>
+<form asp-action="Edit" method="post" class="needs-validation" novalidate>
+    <input type="hidden" asp-for="Id" />
+    <div class="mb-3">
+        <label class="form-label" asp-for="Name"></label>
+        <input class="form-control" asp-for="Name" required />
+        <div class="invalid-feedback">Please enter a name.</div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" asp-for="Description"></label>
+        <textarea class="form-control" asp-for="Description" rows="3"></textarea>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" asp-for="CategoryId"></label>
+        <select class="form-select" asp-for="CategoryId" asp-items="ViewBag.CategoryList"></select>
+    </div>
+    <button type="submit" class="btn btn-success">Save</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+</form>
+<script>
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>

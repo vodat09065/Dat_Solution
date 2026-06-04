@@ -1,0 +1,22 @@
+@model CMS.Data.Entities.Category
+@{
+    ViewData["Title"] = "Xóa Danh Mục";
+    Layout = "_LayoutAdmin";
+}
+<h2 class="mt-4 mb-3">Xóa Danh Mục</h2>
+<h4>Bạn có chắc muốn xóa danh mục này?</h4>
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">ID</dt>
+        <dd class="col-sm-10">@Model.Id</dd>
+        <dt class="col-sm-2">Tên</dt>
+        <dd class="col-sm-10">@Model.Name</dd>
+        <dt class="col-sm-2">Mô tả</dt>
+        <dd class="col-sm-10">@Model.Description</dd>
+    </dl>
+    <form asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Xóa</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+    </form>
+</div>

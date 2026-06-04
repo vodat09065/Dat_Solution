@@ -1,0 +1,28 @@
+@model CMS.Data.Entities.Customer
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Create Customer";
+}
+<h2 class="mt-4 mb-3">Create Customer</h2>
+<form asp-action="Create" method="post" class="needs-validation" novalidate>
+    <div class="mb-3">
+        <label class="form-label" asp-for="FullName">Full Name</label>
+        <input class="form-control" asp-for="FullName" required />
+        <div class="invalid-feedback">Please enter full name.</div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" asp-for="Email">Email</label>
+        <input class="form-control" asp-for="Email" type="email" required />
+        <div class="invalid-feedback">Please enter a valid email.</div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" asp-for="Phone">Phone</label>
+        <input class="form-control" asp-for="Phone" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label" asp-for="Address">Address</label>
+        <input class="form-control" asp-for="Address" />
+    </div>
+    <button type="submit" class="btn btn-success">Save</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+</form>

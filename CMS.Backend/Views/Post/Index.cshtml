@@ -1,0 +1,33 @@
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Quản lý Bài viết";
+}
+
+<h2 class="text-primary mb-4">DANH SÁCH BÀI VIẾT</h2>
+<table class="table table-hover table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Tiêu đề</th>
+            <th>Danh mục</th>
+            <th>Ngày tạo</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model) {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Title</td>
+            <td>@item.Category?.Name</td>
+            <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>
+            <td>
+                <a class="btn btn-sm btn-primary me-1" href="@Url.Action("Details", "Post", new { id = item.Id })">Chi tiết</a>
+                <a class="btn btn-sm btn-warning me-1" href="@Url.Action("Edit", "Post", new { id = item.Id })">Sửa</a>
+                <a class="btn btn-sm btn-danger" href="@Url.Action("Delete", "Post", new { id = item.Id })" onclick="return confirm('Bạn có chắc muốn xóa?');">Xóa</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<a class="btn btn-success" href="@Url.Action("Create", "Post")">Thêm mới</a>
