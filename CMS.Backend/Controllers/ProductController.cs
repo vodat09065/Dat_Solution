@@ -24,7 +24,7 @@ namespace CMS.Backend.Controllers
 
         public IActionResult Create()
         {
-            ViewBag.CategoryProductList = new SelectList(_context.CategoryProducts.Include(cp => cp.Category), "Id", "Category.Name");
+            ViewBag.CategoryProductList = new SelectList(_context.CategoryProducts, "Id", "Name");
             return View();
         }
 
@@ -50,7 +50,7 @@ namespace CMS.Backend.Controllers
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null) return NotFound();
-            ViewBag.CategoryProductList = new SelectList(_context.CategoryProducts.Include(cp => cp.Category), "Id", "Category.Name", product.CategoryProductId);
+            ViewBag.CategoryProductList = new SelectList(_context.CategoryProducts, "Id", "Name", product.CategoryProductId);
             return View(product);
         }
 

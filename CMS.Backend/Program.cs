@@ -7,7 +7,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Cấu hình CORS để ReactJS Frontend có thể gọi API
+// =================== THÊM MỚI Ở ĐÂY ===================
+// Cấu hình các dịch vụ cần thiết để sinh tài liệu Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+// =====================================================
+
+// Cấu hình CORS để ReactJS Frontend có thể gọi A\
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReact", policy =>
@@ -25,6 +32,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/Account/Login";
         options.AccessDeniedPath = "/Account/AccessDenied";
     });
+
 // Đăng ký DbContext vào hệ thống
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -38,6 +46,14 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+// =================== THÊM MỚI Ở ĐÂY ===================
+else
+{
+    // Kích hoạt giao diện Swagger UI khi chạy ở môi trường phát triển (Development)
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+// =====================================================
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

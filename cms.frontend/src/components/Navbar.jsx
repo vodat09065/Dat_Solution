@@ -15,22 +15,22 @@ export const Navbar = () => {
     <header className="header-navbar">
       <div className="container navbar-container">
         <Link to="/" className="navbar-brand">
-          <span>🛍️ DatShop Client</span>
+          <span>🛍️ DatCMS Shop</span>
         </Link>
 
         <nav>
           <ul className="navbar-menu">
             <li>
-              <NavLink 
-                to="/" 
+              <NavLink
+                to="/"
                 className={({ isActive }) => isActive ? "navbar-link active" : "navbar-link"}
               >
                 Trang chủ
               </NavLink>
             </li>
             <li>
-              <NavLink 
-                to="/shop" 
+              <NavLink
+                to="/shop"
                 className={({ isActive }) => isActive ? "navbar-link active" : "navbar-link"}
               >
                 Cửa hàng
@@ -71,9 +71,9 @@ export const Navbar = () => {
               <Link to="/profile" className="btn btn-outline" style={{ padding: '6px 12px', fontSize: '13px' }}>
                 Lịch sử
               </Link>
-              <button 
-                onClick={handleLogout} 
-                className="btn btn-primary" 
+              <button
+                onClick={handleLogout}
+                className="btn btn-primary"
                 style={{ padding: '6px 12px', fontSize: '13px', backgroundColor: 'var(--danger)' }}
               >
                 Đăng xuất

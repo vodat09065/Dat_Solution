@@ -1,45 +1,41 @@
-@model CMS.Data.Entities.Product
+@model CMS.Data.Entities.Post
 @{
-    ViewData["Title"] = "Sửa sản phẩm";
+    ViewData["Title"] = "Sửa bài viết";
     Layout = "_LayoutAdmin";
 }
-<h2 class="mt-4 mb-3">Sửa sản phẩm</h2>
+<h2 class="mt-4 mb-3">Sửa bài viết</h2>
 <form asp-action="Edit" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
     <input type="hidden" asp-for="Id" />
     <div class="mb-3">
-        <label class="form-label">Tên sản phẩm</label>
-        <input class="form-control" asp-for="Name" required />
-        <div class="invalid-feedback">Vui lòng nhập tên sản phẩm.</div>
+        <label class="form-label">Tiêu đề</label>
+        <input class="form-control" asp-for="Title" required />
+        <div class="invalid-feedback">Vui lòng nhập tiêu đề bài viết.</div>
     </div>
     <div class="mb-3">
-        <label class="form-label">Mô tả</label>
-        <textarea class="form-control" asp-for="Description" rows="3"></textarea>
+        <label class="form-label">Nội dung</label>
+        <textarea class="form-control" asp-for="Content" rows="10" required></textarea>
+        <div class="invalid-feedback">Vui lòng nhập nội dung bài viết.</div>
     </div>
     <div class="row">
         <div class="col-md-6 mb-3">
-            <label class="form-label">Giá (VND)</label>
-            <input class="form-control" asp-for="Price" type="number" step="1000" min="0" required />
-            <div class="invalid-feedback">Vui lòng nhập giá sản phẩm.</div>
+            <label class="form-label">Danh mục</label>
+            <select class="form-select" asp-for="CategoryId" asp-items="ViewBag.CategoryList" required>
+                <option value="">-- Chọn danh mục --</option>
+            </select>
+            <div class="invalid-feedback">Vui lòng chọn danh mục.</div>
         </div>
         <div class="col-md-6 mb-3">
-            <label class="form-label">Số lượng tồn kho</label>
-            <input class="form-control" asp-for="StockQuantity" type="number" min="0" required />
-            <div class="invalid-feedback">Vui lòng nhập số lượng.</div>
+            <label class="form-label">Ngày đăng</label>
+            <input class="form-control" asp-for="CreatedDate" type="date" required />
+            <div class="invalid-feedback">Vui lòng chọn ngày đăng.</div>
         </div>
     </div>
     <div class="mb-3">
-        <label class="form-label">Danh mục sản phẩm</label>
-        <select class="form-select" asp-for="CategoryProductId" asp-items="ViewBag.CategoryProductList" required>
-            <option value="">-- Chọn danh mục --</option>
-        </select>
-        <div class="invalid-feedback">Vui lòng chọn danh mục.</div>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Hình ảnh sản phẩm</label>
+        <label class="form-label">Hình ảnh bài viết</label>
         @if (!string.IsNullOrEmpty(Model.ImageUrl))
         {
             <div class="mb-2">
-                <img src="@Model.ImageUrl" alt="@Model.Name" style="height:120px; border-radius:6px;" />
+                <img src="@Model.ImageUrl" alt="@Model.Title" style="height:120px; border-radius:6px;" onerror="this.style.display='none'" />
                 <div class="form-text">Ảnh hiện tại. Tải ảnh mới để thay thế.</div>
             </div>
         }

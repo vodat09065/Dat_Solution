@@ -1,35 +1,33 @@
 @model CMS.Data.Entities.Category
 @{
-    ViewData["Title"] = "Thêm Danh Mục";
-    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Thêm Danh mục";
 }
-<h2 class="mt-4 mb-3">Thêm Danh Mục</h2>
-<form asp-action="Create" method="post" class="needs-validation" novalidate>
-    <div class="mb-3">
-        <label class="form-label" asp-for="Name">Tên danh mục</label>
-        <input class="form-control" asp-for="Name" required />
-        <div class="invalid-feedback">Vui lòng nhập tên danh mục.</div>
+<h2>Thêm Danh mục mới</h2>
+
+<form asp-action="Create" enctype="multipart/form-data">
+    <!-- THÊM enctype -->
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="Description">Mô tả</label>
-        <textarea class="form-control" asp-for="Description" rows="3"></textarea>
+
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-success">Lưu</button>
-    <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+
+    <div class="form-group">
+        <!-- THÊM PHẦN UPLOAD ẢNH -->
+        <label>Hình ảnh</label>
+        <input type="file" name="imageFile" class="form-control" accept="image/*" />
+    </div>
+
+    <div class="form-group mt-3">
+        <input type="submit" value="Tạo mới" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    </div>
 </form>
-<script>
-    // Bootstrap validation
-    (function () {
-        'use strict'
-        var forms = document.querySelectorAll('.needs-validation')
-        Array.prototype.slice.call(forms).forEach(function (form) {
-            form.addEventListener('submit', function (event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                }
-                form.classList.add('was-validated')
-            }, false)
-        })
-    })()
-</script>

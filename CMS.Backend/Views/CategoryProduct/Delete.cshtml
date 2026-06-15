@@ -1,12 +1,64 @@
-@model CMS.Data.Entities.CategoryProduct
+﻿@model CMS.Data.Entities.CategoryProduct
 @{
-    ViewData["Title"] = "Delete CategoryProduct";
-    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Xóa Danh mục Sản phẩm";
 }
-<h2 class="mt-4 mb-3">Delete CategoryProduct</h2>
-<form asp-action="Delete" method="post">
+
+<h2 class="text-danger mb-4">Xóa Danh mục Sản phẩm</h2>
+
+<div class="alert alert-warning">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    Bạn có chắc chắn muốn xóa danh mục này? Hành động này không thể hoàn tác!
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="mb-3">
+                    <label class="fw-bold">Hình ảnh</label>
+                    <div class="mt-2">
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <img src="@Model.ImageUrl" style="width: 150px; height: 150px; object-fit: cover; border-radius: 5px;" />
+                        }
+                        else
+                        {
+                            <span class="text-muted">Không có ảnh</span>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="mb-3">
+                    <label class="fw-bold">ID</label>
+                    <p>@Model.Id</p>
+                </div>
+
+                <div class="mb-3">
+                    <label class="fw-bold">Tên danh mục</label>
+                    <p>@Model.Name</p>
+                </div>
+
+                <div class="mb-3">
+                    <label class="fw-bold">Danh mục cha</label>
+                    <p>@(Model.Category?.Name ?? "Không có")</p>
+                </div>
+
+                <div class="mb-3">
+                    <label class="fw-bold">Mô tả</label>
+                    <p>@(string.IsNullOrEmpty(Model.Description) ? "Không có mô tả" : Model.Description)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form asp-action="Delete" class="mt-3">
     <input type="hidden" asp-for="Id" />
-    <p>Are you sure you want to delete <strong>@Model.Name</strong>?</p>
-    <button type="submit" class="btn btn-danger">Delete</button>
-    <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+    <button type="submit" class="btn btn-danger" onclick="return confirm('Xác nhận xóa danh mục này?');">
+        <i class="bi bi-trash"></i> Xác nhận xóa
+    </button>
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Quay lại
+    </a>
 </form>

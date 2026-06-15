@@ -1,35 +1,40 @@
-@model CMS.Data.Entities.Category
+﻿@model CMS.Data.Entities.Category
 @{
-    ViewData["Title"] = "Edit Category";
-    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Sửa Danh mục";
 }
-<h2 class="mt-4 mb-3">Edit Category</h2>
-<form asp-action="Edit" method="post" class="needs-validation" novalidate>
+<h2>Sửa Danh mục</h2>
+
+<form asp-action="Edit" enctype="multipart/form-data"> <!-- THÊM enctype -->
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="Id" />
-    <div class="mb-3">
-        <label class="form-label" asp-for="Name">Name</label>
-        <input class="form-control" asp-for="Name" required />
-        <div class="invalid-feedback">Please enter the name.</div>
+    
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <div class="form-group">
+            <label>Hình ảnh hiện tại</label><br/>
+            <img src="@Model.ImageUrl" style="max-width: 200px; margin-bottom: 10px;" />
+        </div>
+    }
+    
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="Description">Description</label>
-        <textarea class="form-control" asp-for="Description" rows="3"></textarea>
+    
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+    
+    <div class="form-group"> <!-- UPLOAD ẢNH MỚI -->
+        <label>Đổi ảnh mới (nếu có)</label>
+        <input type="file" name="imageFile" class="form-control" accept="image/*" />
+    </div>
+    
+    <div class="form-group mt-3">
+        <input type="submit" value="Lưu" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    </div>
 </form>
-<script>
-    (function () {
-        'use strict';
-        var forms = document.querySelectorAll('.needs-validation');
-        Array.prototype.slice.call(forms).forEach(function (form) {
-            form.addEventListener('submit', function (event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-            }, false);
-        });
-    })();
-</script>
