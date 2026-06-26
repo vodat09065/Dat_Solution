@@ -36,6 +36,22 @@ export const Navbar = () => {
                 Cửa hàng
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to="/posts"
+                className={({ isActive }) => isActive ? "navbar-link active" : "navbar-link"}
+              >
+                Bài viết
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/contact"
+                className={({ isActive }) => isActive ? "navbar-link active" : "navbar-link"}
+              >
+                Liên hệ
+              </NavLink>
+            </li>
           </ul>
         </nav>
 
@@ -69,7 +85,7 @@ export const Navbar = () => {
                 👤 {customer.fullName}
               </span>
               <Link to="/profile" className="btn btn-outline" style={{ padding: '6px 12px', fontSize: '13px' }}>
-                Lịch sử
+                Hồ sơ
               </Link>
               <button
                 onClick={handleLogout}

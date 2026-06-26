@@ -10,26 +10,45 @@ export const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
-  const navigate = useNavigate();
-
-  const banners = [
+  const [banners, setBanners] = useState([
     {
       id: 1,
-      title: "Bộ Sưu Tập Thời Trang Hè 2026",
-      desc: "Khám phá những mẫu quần áo sành điệu, chất liệu cao cấp và dịch vụ giao hàng siêu tốc.",
-      btnText: "Mua sắm ngay 🛍️",
-      bg: "linear-gradient(135deg, #4f46e5 0%, #0ea5e9 50%, #8b5cf6 100%)"
-    },
-    {
-      id: 2,
-      title: "Ưu Đãi Độc Quyền - Giảm 50%",
-      desc: "Nâng tầm phong cách của bạn với những thiết kế mới nhất. Đừng bỏ lỡ cơ hội mua sắm tiết kiệm.",
-      btnText: "Khám phá ngay 🔥",
-      bg: "linear-gradient(135deg, #ff416c 0%, #ff4b2b 50%, #f9d423 100%)"
+      title: "Đang tải dữ liệu...",
+      desc: "Vui lòng chờ trong giây lát",
+      btnText: "Đọc tiếp",
+      bg: "linear-gradient(135deg, #4f46e5 0%, #0ea5e9 50%, #8b5cf6 100%)",
+      url: "/"
     }
+  ]);
+  const navigate = useNavigate();
+
+  const defaultGradients = [
+    "linear-gradient(135deg, #4f46e5 0%, #0ea5e9 50%, #8b5cf6 100%)",
+    "linear-gradient(135deg, #ff416c 0%, #ff4b2b 50%, #f9d423 100%)",
+    "linear-gradient(135deg, #0ba360 0%, #3cba92 50%, #30E8BF 100%)"
   ];
 
   useEffect(() => {
+    fetch(`${API_BASE}/Posts`)
+      .then(res => res.json())
+      .then(data => {
+        if(data && data.length > 0) {
+          const dynamicBanners = data.slice(0, 3).map((post, idx) => ({
+            id: post.id,
+            title: post.title,
+            desc: post.content ? post.content.replace(/<[^>]*>?/gm, '').substring(0, 100) + "..." : "Tin tức mới nhất",
+            btnText: "Đọc tiếp",
+            bg: defaultGradients[idx % defaultGradients.length],
+            url: `/posts/${post.id}`
+          }));
+          setBanners(dynamicBanners);
+        }
+      })
+      .catch(err => console.log("Lỗi tải banner: ", err));
+  }, []);
+
+  useEffect(() => {
+    if (banners.length === 0) return;
     const bannerInterval = setInterval(() => {
       setCurrentBannerIndex(prev => (prev + 1) % banners.length);
     }, 4000);
@@ -109,7 +128,7 @@ export const Home = () => {
           <p style={{ fontSize: '18px', maxWidth: '600px', margin: '0 auto 30px auto', opacity: 0.9, textShadow: '1px 1px 2px rgba(0,0,0,0.1)' }}>
             {banners[currentBannerIndex].desc}
           </p>
-          <button onClick={() => navigate('/shop')} className="btn btn-success" style={{ 
+          <button onClick={() => navigate(banners[currentBannerIndex]?.url || '/shop')} className="btn btn-success" style={{ 
             padding: '12px 30px', 
             fontSize: '16px', 
             boxShadow: '0 4px 15px rgba(0,0,0,0.2)',

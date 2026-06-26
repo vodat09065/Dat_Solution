@@ -11,6 +11,10 @@ import { Checkout } from './pages/Checkout';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Profile } from './pages/Profile';
+import { Posts } from './pages/Posts';
+import { PostDetail } from './pages/PostDetail';
+import { Contact } from './pages/Contact';
+import { About } from './pages/About';
 import './App.css';
 
 function App() {
@@ -29,6 +33,10 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/posts" element={<Posts />} />
+              <Route path="/posts/:id" element={<PostDetail />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/about" element={<About />} />
             </Routes>
           </main>
           <Footer />

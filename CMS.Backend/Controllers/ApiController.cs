@@ -192,7 +192,9 @@ namespace CMS.Backend.Controllers
                 message = "Đăng ký tài khoản thành công",
                 customerId = customer.Id,
                 fullName = customer.FullName,
-                email = customer.Email
+                email = customer.Email,
+                phone = customer.Phone,
+                address = customer.Address
             });
         }
 
@@ -225,7 +227,50 @@ namespace CMS.Backend.Controllers
                 customerId = customer.Id,
                 fullName = customer.FullName,
                 email = customer.Email,
+                phone = customer.Phone,
+                address = customer.Address,
                 token = "fake-jwt-token-for-customer-" + customer.Id
+            });
+        }
+
+        public class UpdateProfileRequest
+        {
+            public int CustomerId { get; set; }
+            public string FullName { get; set; }
+            public string Phone { get; set; }
+            public string Address { get; set; }
+        }
+
+        // PUT: /api/Auth/CustomerUpdate
+        [HttpPut("Auth/CustomerUpdate")]
+        public async Task<IActionResult> CustomerUpdate([FromBody] UpdateProfileRequest request)
+        {
+            if (request == null || request.CustomerId <= 0)
+            {
+                return BadRequest(new { message = "Thông tin không hợp lệ" });
+            }
+
+            var customer = await _context.Customers.FindAsync(request.CustomerId);
+            if (customer == null)
+            {
+                return NotFound(new { message = "Không tìm thấy khách hàng" });
+            }
+
+            customer.FullName = request.FullName;
+            customer.Phone = request.Phone;
+            customer.Address = request.Address;
+
+            _context.Customers.Update(customer);
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Cập nhật thành công",
+                customerId = customer.Id,
+                fullName = customer.FullName,
+                email = customer.Email,
+                phone = customer.Phone,
+                address = customer.Address
             });
         }
 

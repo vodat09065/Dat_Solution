@@ -37,7 +37,8 @@ export const Checkout = () => {
     }
 
     if (!fullName || !phone || !address) {
-      alert('Vui lòng điền đầy đủ Họ tên, Số điện thoại và Địa chỉ giao hàng!');
+      alert('Vui lòng cập nhật đầy đủ Họ tên, Số điện thoại và Địa chỉ giao hàng trong Hồ sơ cá nhân trước khi đặt hàng!');
+      navigate('/profile');
       return;
     }
 
@@ -119,45 +120,38 @@ export const Checkout = () => {
           boxShadow: 'var(--shadow-sm)',
           border: '1px solid var(--border)'
         }}>
-          <h2 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '20px', color: 'var(--text-main)' }}>
-            📍 Thông tin giao hàng
-          </h2>
-
-          <div className="form-group">
-            <label className="form-label">Họ và tên người nhận</label>
-            <input
-              type="text"
-              className="form-control"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              placeholder="Nhập tên người nhận hàng"
-              required
-            />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <h2 style={{ fontSize: '18px', fontWeight: '800', margin: 0, color: 'var(--text-main)' }}>
+              📍 Thông tin giao hàng
+            </h2>
+            <Link to="/profile" className="btn btn-outline" style={{ padding: '6px 12px', fontSize: '13px' }}>
+              Thay đổi
+            </Link>
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Số điện thoại liên hệ</label>
-            <input
-              type="text"
-              className="form-control"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="Nhập số điện thoại giao hàng"
-              required
-            />
-          </div>
+          <div style={{ display: 'grid', gap: '15px', fontSize: '15px', marginBottom: '25px', backgroundColor: '#f8fafc', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+            <div>
+              <span style={{ color: 'var(--text-muted)', fontWeight: '600', display: 'block', marginBottom: '4px' }}>Họ và tên người nhận:</span>
+              <span style={{ fontWeight: '500', color: 'var(--text-main)' }}>{fullName}</span>
+            </div>
 
-          <div className="form-group">
-            <label className="form-label">Địa chỉ giao hàng</label>
-            <textarea
-              className="form-control"
-              rows="3"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố"
-              style={{ resize: 'vertical' }}
-              required
-            />
+            <div>
+              <span style={{ color: 'var(--text-muted)', fontWeight: '600', display: 'block', marginBottom: '4px' }}>Số điện thoại liên hệ:</span>
+              {phone ? (
+                <span style={{ fontWeight: '500', color: 'var(--text-main)' }}>{phone}</span>
+              ) : (
+                <span style={{ color: 'var(--danger)', fontWeight: '600' }}>⚠️ Chưa cập nhật số điện thoại</span>
+              )}
+            </div>
+
+            <div>
+              <span style={{ color: 'var(--text-muted)', fontWeight: '600', display: 'block', marginBottom: '4px' }}>Địa chỉ giao hàng:</span>
+              {address ? (
+                <span style={{ fontWeight: '500', color: 'var(--text-main)', lineHeight: '1.4', display: 'block' }}>{address}</span>
+              ) : (
+                <span style={{ color: 'var(--danger)', fontWeight: '600' }}>⚠️ Chưa cập nhật địa chỉ giao hàng</span>
+              )}
+            </div>
           </div>
 
           <div className="form-group">

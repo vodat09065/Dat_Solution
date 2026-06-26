@@ -10,6 +10,15 @@ export const Shop = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+
+  // Reset page when category changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory]);
 
   // Nhận thông tin chuyển hướng từ trang chủ
   useEffect(() => {
@@ -42,6 +51,12 @@ export const Shop = () => {
       });
   }, [selectedCategory]);
 
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentProducts = products.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+
   return (
     <div>
       {/* Menu danh mục lọc ngang ở Tầng 3 */}
@@ -60,7 +75,32 @@ export const Shop = () => {
           </p>
         </div>
 
-        <ProductGrid products={products} loading={loading} error={error} />
+        <ProductGrid products={currentProducts} loading={loading} error={error} />
+
+        {/* Pagination Controls */}
+        {!loading && !error && totalPages > 1 && (
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '40px', gap: '10px' }}>
+            <button 
+              className="btn btn-outline-secondary" 
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              style={{ padding: '8px 16px', borderRadius: '8px' }}
+            >
+              &laquo; Trang trước
+            </button>
+            <span style={{ padding: '8px 16px', fontWeight: 'bold', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #dee2e6' }}>
+              Trang {currentPage} / {totalPages}
+            </span>
+            <button 
+              className="btn btn-outline-secondary" 
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              style={{ padding: '8px 16px', borderRadius: '8px' }}
+            >
+              Trang sau &raquo;
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -39,6 +39,14 @@ export const AppProvider = ({ children }) => {
     setCustomer(null);
   };
 
+  // Cập nhật thông tin khách hàng (chỉ cập nhật một phần)
+  const updateCustomerInfo = (newInfo) => {
+    setCustomer(prev => {
+      if (!prev) return null;
+      return { ...prev, ...newInfo };
+    });
+  };
+
   // Thêm vào giỏ hàng
   const addToCart = (product, qty = 1) => {
     setCart((prevCart) => {
@@ -94,6 +102,7 @@ export const AppProvider = ({ children }) => {
         cart,
         loginCustomer,
         logoutCustomer,
+        updateCustomerInfo,
         addToCart,
         updateCartQuantity,
         removeFromCart,
