@@ -1,4 +1,4 @@
-﻿/*
+/*
 -Sinh vien: Vo Thanh Dat
 - MSSV: 2123110212
 - Ngay tao: 15 / 05 / 2026
@@ -31,6 +31,10 @@ namespace CMS.Data.Entities
         public int StockQuantity { get; set; }
 
         public string? ImageUrl { get; set; }
+
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
+
+        public DateTime? UpdatedDate { get; set; }
 
         // Khóa ngoại nối tới CategoryProduct
         public int CategoryProductId { get; set; }

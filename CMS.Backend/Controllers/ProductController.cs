@@ -16,9 +16,25 @@ namespace CMS.Backend.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pg = 1)
         {
-            var products = await _context.Products.Include(p => p.CategoryProduct).ThenInclude(cp => cp.Category).ToListAsync();
+            const int pageSize = 10;
+            if (pg < 1) pg = 1;
+
+            var query = _context.Products.Include(p => p.CategoryProduct).ThenInclude(cp => cp.Category);
+            int recsCount = await query.CountAsync();
+
+            int totalPages = (int)Math.Ceiling((decimal)recsCount / pageSize);
+            
+            var products = await query
+                .OrderByDescending(p => p.Id)
+                .Skip((pg - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            ViewBag.CurrentPage = pg;
+            ViewBag.TotalPages = totalPages;
+
             return View(products);
         }
 
@@ -72,6 +88,7 @@ namespace CMS.Backend.Controllers
                 var old = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == model.Id);
                 if (old != null && string.IsNullOrEmpty(model.ImageUrl)) model.ImageUrl = old.ImageUrl;
             }
+            
             _context.Products.Update(model);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

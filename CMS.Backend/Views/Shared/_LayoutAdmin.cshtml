@@ -147,6 +147,11 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a href="/Banner/Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Banner" ? "active" : "")">
+                    <i class="bi bi-image-fill me-2"></i>Quản lý Banner
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="/Customer/Index" class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Customer" ? "active" : "")">
                     <i class="bi bi-person-badge-fill me-2"></i>Quản lý Khách hàng
                 </a>

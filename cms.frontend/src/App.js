@@ -15,6 +15,7 @@ import { Posts } from './pages/Posts';
 import { PostDetail } from './pages/PostDetail';
 import { Contact } from './pages/Contact';
 import { About } from './pages/About';
+import { ForgotPassword } from './pages/ForgotPassword';
 import './App.css';
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/posts" element={<Posts />} />
               <Route path="/posts/:id" element={<PostDetail />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<About />} />
             </Routes>

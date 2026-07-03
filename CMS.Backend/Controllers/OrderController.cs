@@ -46,6 +46,7 @@ namespace CMS.Backend.Controllers
         {
             if (ModelState.IsValid)
             {
+                model.OrderDate = DateTime.Now;
                 _context.Orders.Add(model);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -81,6 +82,19 @@ namespace CMS.Backend.Controllers
             if (order != null)
             {
                 _context.Orders.Remove(order);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Approve(int id)
+        {
+            var order = await _context.Orders.FindAsync(id);
+            if (order != null && order.Status == 0)
+            {
+                order.Status = 1; // 1: Đã duyệt
+                _context.Orders.Update(order);
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));

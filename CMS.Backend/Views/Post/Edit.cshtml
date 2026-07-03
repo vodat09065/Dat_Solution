@@ -46,7 +46,7 @@
     <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
     <a asp-action="Index" class="btn btn-secondary ms-2">Hủy</a>
 </form>
-<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+<script src="https://cdn.ckeditor.com/4.25.1-lts/standard/ckeditor.js"></script>
 <script>
     (function () {
         'use strict';
@@ -67,6 +67,9 @@
         });
 
         // Initialize CKEditor
-        CKEDITOR.replace('Content');
+        CKEDITOR.replace('Content', {
+            filebrowserUploadUrl: '/Post/UploadImage',
+            filebrowserUploadMethod: 'form'
+        });
     })();
 </script>

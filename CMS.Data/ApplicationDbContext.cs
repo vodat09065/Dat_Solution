@@ -23,6 +23,7 @@ namespace CMS.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<Banner> Banners { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -230,6 +231,15 @@ namespace CMS.Data
                 // Order 7 (Chờ duyệt): Lý Tiểu Long mua nón và túi tote
                 new OrderDetail { Id = 12, OrderId = 7, ProductId = 17, Quantity = 1, UnitPrice = 120000m },
                 new OrderDetail { Id = 13, OrderId = 7, ProductId = 18, Quantity = 1, UnitPrice = 99000m }
+            );
+
+            // =============================================
+            // 9. BẢNG BANNERS (Banner trang chủ)
+            // =============================================
+            modelBuilder.Entity<Banner>().HasData(
+                new Banner { Id = 1, Title = "Bộ sưu tập Hè 2026", Description = "Khám phá phong cách mới nhất", ImageUrl = "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=1200", TargetUrl = "/shop", IsActive = true, SortOrder = 1, CreatedDate = new DateTime(2026, 6, 1) },
+                new Banner { Id = 2, Title = "Thời trang công sở", Description = "Thanh lịch và tự tin", ImageUrl = "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1200", TargetUrl = "/shop?category=3", IsActive = true, SortOrder = 2, CreatedDate = new DateTime(2026, 6, 2) },
+                new Banner { Id = 3, Title = "Khuyến mãi 50%", Description = "Dành riêng cho khách hàng mới", ImageUrl = "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=1200", TargetUrl = "/shop", IsActive = true, SortOrder = 3, CreatedDate = new DateTime(2026, 6, 3) }
             );
         }
     }

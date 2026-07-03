@@ -9,6 +9,7 @@
     <div class="mb-3">
         <label class="form-label">Tên sản phẩm</label>
         <input class="form-control" asp-for="Name" required />
+        <input type="hidden" asp-for="CreatedDate" />
         <div class="invalid-feedback">Vui lòng nhập tên sản phẩm.</div>
     </div>
     <div class="mb-3">
@@ -33,6 +34,11 @@
             <option value="">-- Chọn danh mục --</option>
         </select>
         <div class="invalid-feedback">Vui lòng chọn danh mục.</div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Ngày cập nhật hàng (Quyết định thứ tự trang chủ)</label>
+        <input class="form-control" asp-for="UpdatedDate" type="datetime-local" value="@(Model.UpdatedDate.HasValue ? Model.UpdatedDate.Value.ToString("yyyy-MM-ddTHH:mm") : DateTime.Now.ToString("yyyy-MM-ddTHH:mm"))" />
+        <div class="form-text">Bạn có thể đổi sang ngày khác để sản phẩm lên hoặc xuống trong danh sách mới nhất.</div>
     </div>
     <div class="mb-3">
         <label class="form-label">Hình ảnh sản phẩm</label>

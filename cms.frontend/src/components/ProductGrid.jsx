@@ -12,8 +12,9 @@ export const ProductGrid = ({ products, loading, error }) => {
   const handleAddToCart = (e, product) => {
     e.preventDefault();
     e.stopPropagation();
-    addToCart(product, 1);
-    alert(`Đã thêm "${product.name}" vào giỏ hàng!`);
+    if (addToCart(product, 1)) {
+      alert(`Đã thêm "${product.name}" vào giỏ hàng!`);
+    }
   };
 
   if (loading) return <div style={{ textAlign: 'center', padding: '40px 0', fontSize: '16px' }}>Đang tải danh sách sản phẩm...</div>;

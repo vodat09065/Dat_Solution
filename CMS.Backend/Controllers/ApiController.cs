@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net;
+using System.Net.Mail;
 
 namespace CMS.Backend.Controllers
 {
@@ -32,7 +34,8 @@ namespace CMS.Backend.Controllers
                     cp.Id,
                     cp.Name,
                     cp.Description,
-                    cp.CategoryId
+                    cp.CategoryId,
+                    cp.ImageUrl
                 })
                 .ToListAsync();
             return Ok(list);
@@ -44,6 +47,26 @@ namespace CMS.Backend.Controllers
         {
             var list = await _context.Posts
                 .OrderByDescending(p => p.CreatedDate)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Title,
+                    p.Content,
+                    p.ImageUrl,
+                    p.CreatedDate,
+                    p.CategoryId
+                })
+                .ToListAsync();
+            return Ok(list);
+        }
+
+        // GET: /api/Posts/Banners
+        [HttpGet("Posts/Banners")]
+        public async Task<IActionResult> GetBanners()
+        {
+            var list = await _context.Posts
+                .OrderByDescending(p => p.CreatedDate)
+                .Take(3)
                 .Select(p => new
                 {
                     p.Id,
@@ -88,16 +111,125 @@ namespace CMS.Backend.Controllers
 
         // GET: /api/Products
         [HttpGet("Products")]
-        public async Task<IActionResult> GetProducts()
+        public async Task<IActionResult> GetProducts([FromQuery] string? search, [FromQuery] decimal? minPrice, [FromQuery] decimal? maxPrice)
         {
-            var list = await _context.Products
+            var query = _context.Products.AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                var lowerSearch = search.ToLower();
+                query = query.Where(p => p.Name.ToLower().Contains(lowerSearch) || p.Description.ToLower().Contains(lowerSearch))
+                             .OrderByDescending(p => p.Name.ToLower().StartsWith(lowerSearch))
+                             .ThenByDescending(p => p.Name.ToLower().Contains(lowerSearch))
+                             .ThenBy(p => p.Name);
+            }
+            else 
+            {
+                query = query.OrderBy(p => p.Name);
+            }
+
+            if (minPrice.HasValue)
+            {
+                query = query.Where(p => p.Price >= minPrice.Value);
+            }
+
+            if (maxPrice.HasValue)
+            {
+                query = query.Where(p => p.Price <= maxPrice.Value);
+            }
+
+            var list = await query
                 .Select(p => new
                 {
                     p.Id,
                     p.Name,
                     p.Price,
                     p.ImageUrl,
-                    p.CategoryProductId
+                    p.CategoryProductId,
+                    p.CreatedDate,
+                    p.UpdatedDate
+                })
+                .ToListAsync();
+            return Ok(list);
+        }
+
+        [HttpGet("Banners")]
+        public async Task<IActionResult> GetActiveBanners()
+        {
+            var list = await _context.Banners
+                .Where(b => b.IsActive)
+                .OrderBy(b => b.SortOrder)
+                .Select(b => new
+                {
+                    b.Id,
+                    b.Title,
+                    b.Description,
+                    b.ImageUrl,
+                    b.TargetUrl
+                })
+                .ToListAsync();
+            return Ok(list);
+        }
+
+        // GET: /api/Products/Featured
+        [HttpGet("Products/Featured")]
+        public async Task<IActionResult> GetFeaturedProducts()
+        {
+            var list = await _context.Products
+                .OrderByDescending(p => p.UpdatedDate ?? p.CreatedDate)
+                .Take(8)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Name,
+                    p.Price,
+                    p.ImageUrl,
+                    p.CategoryProductId,
+                    p.CreatedDate,
+                    p.UpdatedDate
+                })
+                .ToListAsync();
+            return Ok(list);
+        }
+
+        // GET: /api/Products/New
+        [HttpGet("Products/New")]
+        public async Task<IActionResult> GetNewProducts()
+        {
+            var list = await _context.Products
+                .OrderByDescending(p => p.CreatedDate)
+                .Take(3)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Name,
+                    p.Price,
+                    p.ImageUrl,
+                    p.CategoryProductId,
+                    p.CreatedDate,
+                    p.UpdatedDate
+                })
+                .ToListAsync();
+            return Ok(list);
+        }
+
+        // GET: /api/Products/Hot
+        [HttpGet("Products/Hot")]
+        public async Task<IActionResult> GetHotProducts()
+        {
+            // Tạm thời lấy sản phẩm ngẫu nhiên hoặc theo giá (nếu chưa có thuộc tính lượt mua)
+            var list = await _context.Products
+                .OrderByDescending(p => p.Price) // Tạm lấy theo giá cao nhất làm hot
+                .Take(3)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Name,
+                    p.Price,
+                    p.ImageUrl,
+                    p.CategoryProductId,
+                    p.CreatedDate,
+                    p.UpdatedDate
                 })
                 .ToListAsync();
             return Ok(list);
@@ -115,7 +247,9 @@ namespace CMS.Backend.Controllers
                     p.Name,
                     p.Price,
                     p.ImageUrl,
-                    p.CategoryProductId
+                    p.CategoryProductId,
+                    p.CreatedDate,
+                    p.UpdatedDate
                 })
                 .ToListAsync();
             return Ok(list);
@@ -135,7 +269,9 @@ namespace CMS.Backend.Controllers
                     p.Description,
                     p.StockQuantity,
                     p.ImageUrl,
-                    p.CategoryProductId
+                    p.CategoryProductId,
+                    p.CreatedDate,
+                    p.UpdatedDate
                 })
                 .FirstOrDefaultAsync();
 
@@ -160,6 +296,11 @@ namespace CMS.Backend.Controllers
             public string Address { get; set; }
         }
 
+        public class ForgotPasswordRequest
+        {
+            public string Email { get; set; }
+        }
+
         // POST: /api/Auth/CustomerRegister
         [HttpPost("Auth/CustomerRegister")]
         public async Task<IActionResult> CustomerRegister([FromBody] RegisterRequest request)
@@ -179,7 +320,7 @@ namespace CMS.Backend.Controllers
             {
                 FullName = request.FullName,
                 Email = request.Email,
-                Password = request.Password, // Lưu thô tối giản theo yêu cầu
+                Password = BCrypt.Net.BCrypt.HashPassword(request.Password), // Băm mật khẩu
                 Phone = request.Phone,
                 Address = request.Address
             };
@@ -190,12 +331,70 @@ namespace CMS.Backend.Controllers
             return Ok(new
             {
                 message = "Đăng ký tài khoản thành công",
-                customerId = customer.Id,
-                fullName = customer.FullName,
-                email = customer.Email,
-                phone = customer.Phone,
-                address = customer.Address
+                customerId = customer.Id
             });
+        }
+
+        // POST: /api/Auth/ForgotPassword
+        [HttpPost("Auth/ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            if (string.IsNullOrEmpty(request.Email))
+            {
+                return BadRequest(new { message = "Vui lòng nhập Email" });
+            }
+
+            var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Email.ToLower() == request.Email.ToLower());
+            if (customer == null)
+            {
+                return BadRequest(new { message = "Không tìm thấy tài khoản với Email này" });
+            }
+
+            // Sinh mật khẩu ngẫu nhiên 6 ký tự
+            var random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var newPassword = new string(Enumerable.Repeat(chars, 6)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            // Lưu vào CSDL
+            customer.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            _context.Customers.Update(customer);
+            await _context.SaveChangesAsync();
+
+            // Gửi email
+            try
+            {
+                var smtpClient = new System.Net.Mail.SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    Credentials = new System.Net.NetworkCredential("datthanh12ab@gmail.com", "jpcj ugne ojvl mpyn"),
+                    EnableSsl = true,
+                };
+
+                var mailMessage = new System.Net.Mail.MailMessage
+                {
+                    From = new System.Net.Mail.MailAddress("datthanh12ab@gmail.com"),
+                    Subject = "Cấp lại mật khẩu - DatCMS Shop",
+                    Body = $@"
+                        <h3>Chào {customer.FullName},</h3>
+                        <p>Hệ thống đã cấp lại mật khẩu cho tài khoản của bạn.</p>
+                        <p>Mật khẩu mới của bạn là: <strong>{newPassword}</strong></p>
+                        <p>Vui lòng đăng nhập và đổi mật khẩu mới để đảm bảo an toàn.</p>
+                        <br/>
+                        <p>Cảm ơn bạn đã đồng hành cùng DatCMS Shop!</p>
+                    ",
+                    IsBodyHtml = true,
+                };
+                mailMessage.To.Add(customer.Email);
+                smtpClient.Send(mailMessage);
+            }
+            catch (Exception ex)
+            {
+                // Nếu gửi email lỗi, vẫn báo thành công việc cấp mới nhưng cảnh báo
+                return Ok(new { message = $"Đã cấp lại mật khẩu thành công nhưng gửi email thất bại: {ex.Message}", newPassword });
+            }
+
+            return Ok(new { message = "Mật khẩu mới đã được gửi vào email của bạn. Vui lòng kiểm tra hộp thư." });
         }
 
         public class LoginRequest
@@ -214,11 +413,22 @@ namespace CMS.Backend.Controllers
             }
 
             var customer = await _context.Customers
-                .FirstOrDefaultAsync(c => c.Email.ToLower() == request.Email.ToLower() && c.Password == request.Password);
+                .FirstOrDefaultAsync(c => c.Email.ToLower() == request.Email.ToLower());
 
-            if (customer == null)
+            if (customer == null || !BCrypt.Net.BCrypt.Verify(request.Password, customer.Password))
             {
-                return BadRequest(new { message = "Email hoặc mật khẩu không chính xác" });
+                // Fallback cho tài khoản cũ chưa băm mật khẩu
+                if (customer != null && customer.Password == request.Password)
+                {
+                    // Nâng cấp mật khẩu: Băm lại mật khẩu thô và lưu xuống DB
+                    customer.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
+                    _context.Customers.Update(customer);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    return BadRequest(new { message = "Email hoặc mật khẩu không chính xác" });
+                }
             }
 
             return Ok(new
@@ -300,9 +510,9 @@ namespace CMS.Backend.Controllers
                 return BadRequest(new { message = "Thông tin đặt hàng không hợp lệ" });
             }
 
-            // Kiểm tra khách hàng tồn tại
-            var customerExist = await _context.Customers.AnyAsync(c => c.Id == request.CustomerId);
-            if (!customerExist)
+            // Lấy thông tin khách hàng
+            var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == request.CustomerId);
+            if (customer == null)
             {
                 return BadRequest(new { message = "Khách hàng không tồn tại" });
             }
@@ -357,6 +567,16 @@ namespace CMS.Backend.Controllers
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
+                // Bắt đầu gửi email xác nhận
+                try
+                {
+                    await SendOrderConfirmationEmailAsync(customer.Email, customer.FullName, order.Id, request.CartItems);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[Email Error] Không thể gửi email: {ex.Message}");
+                }
+
                 return Ok(new
                 {
                     message = "Đặt hàng thành công",
@@ -398,6 +618,60 @@ namespace CMS.Backend.Controllers
                 .ToListAsync();
 
             return Ok(orders);
+        }
+
+        private async Task SendOrderConfirmationEmailAsync(string toEmail, string customerName, int orderId, List<CartItemDto> cartItems)
+        {
+            if (string.IsNullOrEmpty(toEmail)) return;
+
+            string fromEmail = "datthanh12ab@gmail.com";
+            string fromPassword = "jpcj ugne ojvl mpyn"; // App Password thật của Gmail
+
+            var fromAddress = new MailAddress(fromEmail, "Dat Solution Store");
+            var toAddress = new MailAddress(toEmail, customerName);
+            string subject = $"Xác nhận đơn hàng #{orderId} - Dat Solution";
+            
+            // Xây dựng nội dung email
+            string body = $"<h2>Xin chào {customerName},</h2>" +
+                          $"<p>Cảm ơn bạn đã đặt hàng tại Dat Solution Store.</p>" +
+                          $"<p>Mã đơn hàng của bạn là: <strong>#{orderId}</strong></p>" +
+                          $"<h3>Chi tiết sản phẩm:</h3><ul>";
+
+            decimal totalAmount = 0;
+            foreach (var item in cartItems)
+            {
+                var product = await _context.Products.FindAsync(item.ProductId);
+                if (product != null)
+                {
+                    decimal lineTotal = item.Quantity * product.Price;
+                    totalAmount += lineTotal;
+                    body += $"<li>{product.Name} - Số lượng: {item.Quantity} - Đơn giá: {product.Price:N0}đ</li>";
+                }
+            }
+            
+            body += $"</ul><p><strong>Tổng cộng: {totalAmount:N0}đ</strong></p>" +
+                    $"<p>Chúng tôi sẽ sớm liên hệ để giao hàng.</p>" +
+                    $"<p>Trân trọng,<br>Đội ngũ Dat Solution.</p>";
+
+            var smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+            };
+
+            using (var message = new MailMessage(fromAddress, toAddress)
+            {
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true
+            })
+            {
+                await smtp.SendMailAsync(message);
+            }
         }
 
         #endregion

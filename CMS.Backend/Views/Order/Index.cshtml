@@ -20,11 +20,17 @@
         @foreach (var item in Model) {
             <tr>
                 <td>@item.Id</td>
-                <td>@item.OrderDate.ToString("yyyy-MM-dd")</td>
+                <td>@item.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
                 <td>@item.CustomerId</td>
-                <td>@item.Status</td>
+                <td>@(item.Status == 0 ? "Chờ duyệt" : item.Status == 1 ? "Đã duyệt" : item.Status.ToString())</td>
                 <td>@item.Notes</td>
                 <td>
+                    @if(item.Status == 0)
+                    {
+                        <form asp-action="Approve" asp-route-id="@item.Id" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-success">Duyệt</button>
+                        </form>
+                    }
                     <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                     <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Are you sure?');">Delete</a>
                 </td>

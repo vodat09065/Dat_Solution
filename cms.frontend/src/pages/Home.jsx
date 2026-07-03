@@ -7,6 +7,8 @@ import { API_BASE } from '../context/AppContext';
 
 export const Home = () => {
   const [products, setProducts] = useState([]);
+  const [newProducts, setNewProducts] = useState([]);
+  const [hotProducts, setHotProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
@@ -29,17 +31,18 @@ export const Home = () => {
   ];
 
   useEffect(() => {
-    fetch(`${API_BASE}/Posts`)
+    fetch(`${API_BASE}/Banners`)
       .then(res => res.json())
       .then(data => {
         if(data && data.length > 0) {
-          const dynamicBanners = data.slice(0, 3).map((post, idx) => ({
-            id: post.id,
-            title: post.title,
-            desc: post.content ? post.content.replace(/<[^>]*>?/gm, '').substring(0, 100) + "..." : "Tin tức mới nhất",
-            btnText: "Đọc tiếp",
-            bg: defaultGradients[idx % defaultGradients.length],
-            url: `/posts/${post.id}`
+          const dynamicBanners = data.map(b => ({
+            id: b.id,
+            title: b.title,
+            desc: b.description || "Khám phá ngay bộ sưu tập mới nhất",
+            btnText: "Xem chi tiết",
+            imageUrl: b.imageUrl ? (b.imageUrl.startsWith('http') ? b.imageUrl : `https://localhost:7111${b.imageUrl}`) : null,
+            bg: b.imageUrl ? null : defaultGradients[b.id % defaultGradients.length],
+            url: b.targetUrl || "/shop"
           }));
           setBanners(dynamicBanners);
         }
@@ -56,14 +59,15 @@ export const Home = () => {
   }, [banners.length]);
 
   useEffect(() => {
-    fetch(`${API_BASE}/Products`)
-      .then((res) => {
-        if (!res.ok) throw new Error('Không thể tải sản phẩm');
-        return res.json();
-      })
-      .then((data) => {
-        // Hiển thị 8 sản phẩm đầu trên trang chủ
-        setProducts(data.slice(0, 8));
+    Promise.all([
+      fetch(`${API_BASE}/Products/Featured`).then(res => res.json()),
+      fetch(`${API_BASE}/Products/New`).then(res => res.json()),
+      fetch(`${API_BASE}/Products/Hot`).then(res => res.json())
+    ])
+      .then(([featuredData, newData, hotData]) => {
+        setProducts(featuredData);
+        setNewProducts(newData);
+        setHotProducts(hotData);
         setLoading(false);
       })
       .catch((err) => {
@@ -102,26 +106,33 @@ export const Home = () => {
           }
         `}
       </style>
-      <section className="animate-banner-bg" style={{
-        background: banners[currentBannerIndex].bg,
-        color: 'white',
-        padding: '80px 0',
-        textAlign: 'center',
-        position: 'relative',
-        overflow: 'hidden',
-        marginBottom: '40px',
-        transition: 'background 1s ease'
-      }}>
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%)',
-          pointerEvents: 'none'
-        }} />
-        <div className="container animate-banner-content" style={{ position: 'relative', zIndex: 1 }} key={banners[currentBannerIndex].id}>
+      <section 
+        key={banners[currentBannerIndex].id}
+        style={{
+          width: '100%',
+          height: '500px',
+          borderRadius: '20px',
+          background: banners[currentBannerIndex].imageUrl 
+                        ? `url('${banners[currentBannerIndex].imageUrl}') center/cover no-repeat` 
+                        : banners[currentBannerIndex].bg,
+          display: 'flex',
+          alignItems: 'center',
+          padding: '0 60px',
+          color: 'white',
+          position: 'relative',
+          overflow: 'hidden',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
+          marginBottom: '40px'
+        }}
+      >
+        {/* Dark overlay cho ảnh dễ nhìn chữ hơn */}
+        {banners[currentBannerIndex].imageUrl && (
+            <div style={{
+                position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                backgroundColor: 'rgba(0,0,0,0.3)', zIndex: 1
+            }}></div>
+        )}
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: '600px' }} className="animate__animated animate__fadeInLeft">
           <h1 style={{ fontSize: '42px', fontWeight: '800', marginBottom: '16px', textShadow: '2px 2px 4px rgba(0,0,0,0.2)' }}>
             {banners[currentBannerIndex].title}
           </h1>
@@ -156,16 +167,40 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* Product Section ở Tầng 4 */}
+      {/* New Product Section */}
       <section className="container" style={{ marginBottom: '50px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
           <div>
-            <h2 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--text-main)' }}>🔥 Sản phẩm nổi bật</h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginTop: '4px' }}>Các sản phẩm bán chạy nhất tuần này</p>
+            <h2 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--text-main)' }}>🆕 3 Sản phẩm mới nhất</h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginTop: '4px' }}>Những mẫu sản phẩm vừa cập bến cửa hàng</p>
           </div>
           <button onClick={() => navigate('/shop')} className="btn btn-secondary">
             Xem tất cả
           </button>
+        </div>
+        <ProductGrid products={newProducts} loading={loading} error={error} />
+      </section>
+
+      {/* Hot Product Section */}
+      <section className="container" style={{ marginBottom: '50px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+          <div>
+            <h2 style={{ fontSize: '24px', fontWeight: '800', color: '#ff416c' }}>🔥 Sản phẩm Bán Chạy</h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginTop: '4px' }}>Được nhiều khách hàng yêu thích nhất</p>
+          </div>
+          <button onClick={() => navigate('/shop')} className="btn btn-secondary">
+            Xem tất cả
+          </button>
+        </div>
+        <ProductGrid products={hotProducts} loading={loading} error={error} />
+      </section>
+
+      {/* Featured Product Section */}
+      <section className="container" style={{ marginBottom: '50px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+          <div>
+            <h2 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--text-main)' }}>⭐ Sản phẩm nổi bật</h2>
+          </div>
         </div>
         <ProductGrid products={products} loading={loading} error={error} />
       </section>

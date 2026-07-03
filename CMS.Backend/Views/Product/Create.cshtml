@@ -34,6 +34,11 @@
         <div class="invalid-feedback">Vui lòng chọn danh mục.</div>
     </div>
     <div class="mb-3">
+        <label class="form-label">Ngày nhập hàng</label>
+        <input class="form-control" asp-for="CreatedDate" type="date" required />
+        <div class="invalid-feedback">Vui lòng chọn ngày nhập hàng.</div>
+    </div>
+    <div class="mb-3">
         <label class="form-label">Hình ảnh sản phẩm</label>
         <input class="form-control" type="file" name="uploadImage" accept="image/*" />
         <div class="form-text">Hoặc nhập URL hình ảnh trực tiếp bên dưới:</div>
@@ -55,5 +60,11 @@
                 form.classList.add('was-validated');
             }, false);
         });
+
+        // Set default date to today
+        var dateInput = document.querySelector('input[name="CreatedDate"]');
+        if (dateInput && !dateInput.value) {
+            dateInput.value = new Date().toISOString().split('T')[0];
+        }
     })();
 </script>

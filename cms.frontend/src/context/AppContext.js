@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect } from 'react';
 
 export const AppContext = createContext();
 
-export const API_BASE = 'https://localhost:7111/api';
+export const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5278/api';
 
 export const AppProvider = ({ children }) => {
   const [customer, setCustomer] = useState(() => {
@@ -11,21 +11,31 @@ export const AppProvider = ({ children }) => {
   });
 
   const [cart, setCart] = useState(() => {
-    const saved = localStorage.getItem('cart');
-    return saved ? JSON.parse(saved) : [];
+    const savedCustomer = localStorage.getItem('customer');
+    if (savedCustomer) {
+      const parsedCustomer = JSON.parse(savedCustomer);
+      const savedCart = localStorage.getItem(`cart_${parsedCustomer.customerId}`);
+      return savedCart ? JSON.parse(savedCart) : [];
+    }
+    return [];
   });
 
-  // Đồng bộ giỏ hàng với localStorage
+  // Đồng bộ giỏ hàng với localStorage khi giỏ hàng thay đổi
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
-  }, [cart]);
+    if (customer) {
+      localStorage.setItem(`cart_${customer.customerId}`, JSON.stringify(cart));
+    }
+  }, [cart, customer]);
 
-  // Đồng bộ thông tin khách hàng với localStorage
+  // Đồng bộ thông tin khách hàng và tải lại giỏ hàng tương ứng
   useEffect(() => {
     if (customer) {
       localStorage.setItem('customer', JSON.stringify(customer));
+      const savedCart = localStorage.getItem(`cart_${customer.customerId}`);
+      setCart(savedCart ? JSON.parse(savedCart) : []);
     } else {
       localStorage.removeItem('customer');
+      setCart([]); // Làm trống giỏ hàng trên giao diện khi đăng xuất
     }
   }, [customer]);
 
@@ -49,6 +59,12 @@ export const AppProvider = ({ children }) => {
 
   // Thêm vào giỏ hàng
   const addToCart = (product, qty = 1) => {
+    if (!customer) {
+      alert("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!");
+      window.location.href = "/login";
+      return false;
+    }
+    
     setCart((prevCart) => {
       const existing = prevCart.find((item) => item.id === product.id);
       if (existing) {
@@ -60,6 +76,7 @@ export const AppProvider = ({ children }) => {
       }
       return [...prevCart, { ...product, quantity: qty }];
     });
+    return true;
   };
 
   // Thay đổi số lượng sản phẩm trong giỏ hàng

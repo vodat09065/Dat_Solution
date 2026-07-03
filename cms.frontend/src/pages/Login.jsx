@@ -109,7 +109,7 @@ export const Login = () => {
           </div>
 
           <div className="form-group" style={{ marginBottom: '24px' }}>
-            <label className="form-label">Mật khẩu</label>
+            <label className="form-label" style={{ marginBottom: '8px' }}>Mật khẩu</label>
             <input
               type="password"
               className="form-control"
@@ -118,6 +118,11 @@ export const Login = () => {
               placeholder="Nhập mật khẩu"
               required
             />
+            <div style={{ textAlign: 'right', marginTop: '8px' }}>
+              <Link to="/forgot-password" style={{ fontSize: '13px', fontWeight: '500', color: 'var(--primary)', textDecoration: 'none' }}>
+                Quên mật khẩu?
+              </Link>
+            </div>
           </div>
 
           <button

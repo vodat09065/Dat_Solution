@@ -4,6 +4,7 @@ using CMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260626070733_AddProductUpdatedDate")]
+    partial class AddProductUpdatedDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,79 +24,6 @@ namespace CMS.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("CMS.Data.Entities.Banner", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TargetUrl")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Banners");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedDate = new DateTime(2026, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Khám phá phong cách mới nhất",
-                            ImageUrl = "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=1200",
-                            IsActive = true,
-                            SortOrder = 1,
-                            TargetUrl = "/shop",
-                            Title = "Bộ sưu tập Hè 2026"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedDate = new DateTime(2026, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Thanh lịch và tự tin",
-                            ImageUrl = "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1200",
-                            IsActive = true,
-                            SortOrder = 2,
-                            TargetUrl = "/shop?category=3",
-                            Title = "Thời trang công sở"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedDate = new DateTime(2026, 6, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Dành riêng cho khách hàng mới",
-                            ImageUrl = "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=1200",
-                            IsActive = true,
-                            SortOrder = 3,
-                            TargetUrl = "/shop",
-                            Title = "Khuyến mãi 50%"
-                        });
-                });
 
             modelBuilder.Entity("CMS.Data.Entities.Category", b =>
                 {
@@ -680,7 +610,7 @@ namespace CMS.Data.Migrations
                         {
                             Id = 1,
                             CategoryProductId = 1,
-                            CreatedDate = new DateTime(2026, 7, 2, 14, 33, 3, 592, DateTimeKind.Local).AddTicks(6479),
+                            CreatedDate = new DateTime(2026, 6, 26, 14, 7, 32, 826, DateTimeKind.Local).AddTicks(2615),
                             Description = "Áo thun cơ bản màu trắng, form regular fit, chất cotton 100% thoáng mát, thích hợp mặc mọi dịp.",
                             ImageUrl = "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=400",
                             Name = "Áo Thun Cotton Basic Trắng",
@@ -691,7 +621,7 @@ namespace CMS.Data.Migrations
                         {
                             Id = 2,
                             CategoryProductId = 1,
-                            CreatedDate = new DateTime(2026, 7, 2, 14, 33, 3, 592, DateTimeKind.Local).AddTicks(6485),
+                            CreatedDate = new DateTime(2026, 6, 26, 14, 7, 32, 826, DateTimeKind.Local).AddTicks(2623),
                             Description = "Áo thun polo cổ bẻ màu xanh navy lịch sự, chất pique cotton, phù hợp đi học, đi làm, dạo phố.",
                             ImageUrl = "https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?q=80&w=400",
                             Name = "Áo Thun Polo Premium Navy",
@@ -702,7 +632,7 @@ namespace CMS.Data.Migrations
                         {
                             Id = 3,
                             CategoryProductId = 1,
-                            CreatedDate = new DateTime(2026, 7, 2, 14, 33, 3, 592, DateTimeKind.Local).AddTicks(6487),
+                            CreatedDate = new DateTime(2026, 6, 26, 14, 7, 32, 826, DateTimeKind.Local).AddTicks(2624),
                             Description = "Áo thun in hình streetwear phong cách, chất cotton mềm mịn, form oversized trendy.",
                             ImageUrl = "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=400",
                             Name = "Áo Thun Graphic Streetwear",
@@ -713,7 +643,7 @@ namespace CMS.Data.Migrations
                         {
                             Id = 4,
                             CategoryProductId = 1,
-                            CreatedDate = new DateTime(2026, 7, 2, 14, 33, 3, 592, DateTimeKind.Local).AddTicks(6488),
+                            CreatedDate = new DateTime(2026, 6, 26, 14, 7, 32, 826, DateTimeKind.Local).AddTicks(2626),
                             Description = "Áo thun crop top nữ xinh xắn, dễ phối đồ, phong cách Hàn Quốc tươi trẻ.",
                             ImageUrl = "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?q=80&w=400",
                             Name = "Áo Thun Crop Top Nữ",
@@ -724,7 +654,7 @@ namespace CMS.Data.Migrations
                         {
                             Id = 5,
                             CategoryProductId = 2,
-                            CreatedDate = new DateTime(2026, 7, 2, 14, 33, 3, 592, DateTimeKind.Local).AddTicks(6489),
+                            CreatedDate = new DateTime(2026, 6, 26, 14, 7, 32, 826, DateTimeKind.Local).AddTicks(2627),
                             Description = "Quần jeans slimfit màu xanh denim cổ điển, co giãn nhẹ, ôm dáng tôn vóc dáng.",
                             ImageUrl = "https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=400",
                             Name = "Quần Jeans Slimfit Xanh",
@@ -735,7 +665,7 @@ namespace CMS.Data.Migrations
                         {
                             Id = 6,
                             CategoryProductId = 2,
-                            CreatedDate = new DateTime(2026, 7, 2, 14, 33, 3, 592, DateTimeKind.Local).AddTicks(6490),
+                            CreatedDate = new DateTime(2026, 6, 26, 14, 7, 32, 826, DateTimeKind.Local).AddTicks(2628),
                             Description = "Quần jeans skinny màu đen cá tính, co giãn 4 chiều, thoải mái khi vận động.",
                             ImageUrl = "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=400",
                             Name = "Quần Jeans Skinny Đen",
@@ -746,7 +676,7 @@ namespace CMS.Data.Migrations
                         {
                             Id = 7,
                             CategoryProductId = 2,
-                            CreatedDate = new DateTime(2026, 7, 2, 14, 33, 3, 592, DateTimeKind.Local).AddTicks(6491),
+                            CreatedDate = new DateTime(2026, 6, 26, 14, 7, 32, 826, DateTimeKind.Local).AddTicks(2630),
                             Description = "Quần jean baggy form rộng unisex phong cách Y2K đang thịnh hành, nam nữ đều mặc được.",
                             ImageUrl = "https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?q=80&w=400",
                             Name = "Quần Jean Baggy Unisex",
@@ -757,7 +687,7 @@ namespace CMS.Data.Migrations
                         {
                             Id = 8,
                             CategoryProductId = 2,
-                            CreatedDate = new DateTime(2026, 7, 2, 14, 33, 3, 592, DateTimeKind.Local).AddTicks(6493),
+                            CreatedDate = new DateTime(2026, 6, 26, 14, 7, 32, 826, DateTimeKind.Local).AddTicks(2631),
                             Description = "Quần jean rách gối phong cách cá tính, wash màu nhạt, kết hợp dễ dàng với áo thun.",
                             ImageUrl = "https://images.unsplash.com/photo-1565084888279-aca607ecce0c?q=80&w=400",
                             Name = "Quần Jean Rách Gối Trendy",
@@ -768,7 +698,7 @@ namespace CMS.Data.Migrations
                         {
                             Id = 9,
                             CategoryProductId = 3,
-                            CreatedDate = new DateTime(2026, 7, 2, 14, 33, 3, 592, DateTimeKind.Local).AddTicks(6494),
+                            CreatedDate = new DateTime(2026, 6, 26, 14, 7, 32, 826, DateTimeKind.Local).AddTicks(2632),
                             Description = "Đầm voan hoa nhí dịu dàng phong cách vintage, phù hợp đi chơi, picnic, dạo phố.",
                             ImageUrl = "https://images.unsplash.com/photo-1495385794356-15371f348c31?q=80&w=400",
                             Name = "Váy Hoa Nhí Vintage",
@@ -779,7 +709,7 @@ namespace CMS.Data.Migrations
                         {
                             Id = 10,
                             CategoryProductId = 3,
-                            CreatedDate = new DateTime(2026, 7, 2, 14, 33, 3, 592, DateTimeKind.Local).AddTicks(6495),
+                            CreatedDate = new DateTime(2026, 6, 26, 14, 7, 32, 826, DateTimeKind.Local).AddTicks(2634),
                             Description = "Đầm ôm body tôn dáng, chất liệu satin cao cấp, thích hợp dự tiệc, sự kiện sang trọng.",
                             ImageUrl = "https://images.unsplash.com/photo-1566479179817-b359d2ee0f57?q=80&w=400",
                             Name = "Đầm Dạ Hội Sang Trọng",
@@ -790,7 +720,7 @@ namespace CMS.Data.Migrations
                         {
                             Id = 11,
                             CategoryProductId = 3,
-                            CreatedDate = new DateTime(2026, 7, 2, 14, 33, 3, 592, DateTimeKind.Local).AddTicks(6569),
+                            CreatedDate = new DateTime(2026, 6, 26, 14, 7, 32, 826, DateTimeKind.Local).AddTicks(2635),
                             Description = "Váy midi kẻ sọc thanh lịch, dài qua gối, phù hợp đi làm và đi chơi.",
                             ImageUrl = "https://images.unsplash.com/photo-1568252542512-9fe8fe9f6e1a?q=80&w=400",
                             Name = "Váy Midi Kẻ Sọc",
@@ -801,7 +731,7 @@ namespace CMS.Data.Migrations
                         {
                             Id = 12,
                             CategoryProductId = 3,
-                            CreatedDate = new DateTime(2026, 7, 2, 14, 33, 3, 592, DateTimeKind.Local).AddTicks(6571),
+                            CreatedDate = new DateTime(2026, 6, 26, 14, 7, 32, 826, DateTimeKind.Local).AddTicks(2636),
                             Description = "Chân váy xòe phong cách lolita đáng yêu, nhiều màu pastel, kết hợp với áo tuck-in.",
                             ImageUrl = "https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?q=80&w=400",
                             Name = "Chân Váy Xòe Lolita",
@@ -812,7 +742,7 @@ namespace CMS.Data.Migrations
                         {
                             Id = 13,
                             CategoryProductId = 4,
-                            CreatedDate = new DateTime(2026, 7, 2, 14, 33, 3, 592, DateTimeKind.Local).AddTicks(6572),
+                            CreatedDate = new DateTime(2026, 6, 26, 14, 7, 32, 826, DateTimeKind.Local).AddTicks(2637),
                             Description = "Áo khoác bomber chất kaki cao cấp, 2 lớp giữ ấm, phong cách quân đội trendy.",
                             ImageUrl = "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=400",
                             Name = "Áo Khoác Bomber Kaki",
@@ -823,7 +753,7 @@ namespace CMS.Data.Migrations
                         {
                             Id = 14,
                             CategoryProductId = 4,
-                            CreatedDate = new DateTime(2026, 7, 2, 14, 33, 3, 592, DateTimeKind.Local).AddTicks(6573),
+                            CreatedDate = new DateTime(2026, 6, 26, 14, 7, 32, 826, DateTimeKind.Local).AddTicks(2639),
                             Description = "Áo hoodie nỉ bông ấm áp, form rộng unisex, có túi kangaroo và mũ che đầu.",
                             ImageUrl = "https://images.unsplash.com/photo-1556821840-3a63f15732ce?q=80&w=400",
                             Name = "Áo Khoác Hoodie Unisex",
@@ -834,7 +764,7 @@ namespace CMS.Data.Migrations
                         {
                             Id = 15,
                             CategoryProductId = 4,
-                            CreatedDate = new DateTime(2026, 7, 2, 14, 33, 3, 592, DateTimeKind.Local).AddTicks(6575),
+                            CreatedDate = new DateTime(2026, 6, 26, 14, 7, 32, 826, DateTimeKind.Local).AddTicks(2640),
                             Description = "Áo khoác gió chống nước nhẹ, có thể gấp lại bỏ túi, phù hợp du lịch, leo núi.",
                             ImageUrl = "https://images.unsplash.com/photo-1604644401890-0bd678c83788?q=80&w=400",
                             Name = "Áo Khoác Gió Chống Nước",
@@ -845,7 +775,7 @@ namespace CMS.Data.Migrations
                         {
                             Id = 16,
                             CategoryProductId = 4,
-                            CreatedDate = new DateTime(2026, 7, 2, 14, 33, 3, 592, DateTimeKind.Local).AddTicks(6576),
+                            CreatedDate = new DateTime(2026, 6, 26, 14, 7, 32, 826, DateTimeKind.Local).AddTicks(2641),
                             Description = "Áo blazer kẻ caro thanh lịch, oversize nhẹ, phù hợp đi làm, hội thảo, meeting.",
                             ImageUrl = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400",
                             Name = "Áo Blazer Lịch Sự",
@@ -856,7 +786,7 @@ namespace CMS.Data.Migrations
                         {
                             Id = 17,
                             CategoryProductId = 5,
-                            CreatedDate = new DateTime(2026, 7, 2, 14, 33, 3, 592, DateTimeKind.Local).AddTicks(6577),
+                            CreatedDate = new DateTime(2026, 6, 26, 14, 7, 32, 826, DateTimeKind.Local).AddTicks(2642),
                             Description = "Nón lưỡi trai chất kaki bền đẹp, thêu chữ phong cách streetwear.",
                             ImageUrl = "https://images.unsplash.com/photo-1521369909029-2afed882ba54?q=80&w=400",
                             Name = "Nón Lưỡi Trai Thêu Chữ",
@@ -867,7 +797,7 @@ namespace CMS.Data.Migrations
                         {
                             Id = 18,
                             CategoryProductId = 5,
-                            CreatedDate = new DateTime(2026, 7, 2, 14, 33, 3, 592, DateTimeKind.Local).AddTicks(6578),
+                            CreatedDate = new DateTime(2026, 6, 26, 14, 7, 32, 826, DateTimeKind.Local).AddTicks(2644),
                             Description = "Túi tote vải canvas cỡ lớn, đựng vừa laptop 14 inch, tiện dụng cho dân văn phòng và sinh viên.",
                             ImageUrl = "https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=400",
                             Name = "Túi Tote Canvas Basic",

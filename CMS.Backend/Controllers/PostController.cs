@@ -111,5 +111,44 @@ namespace CMS.Backend.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public IActionResult UploadImage(IFormFile upload, string? CKEditorFuncNum)
+        {
+            if (upload != null && upload.Length > 0)
+            {
+                var folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(upload.FileName);
+                var filePath = Path.Combine(folder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    upload.CopyTo(stream);
+                }
+
+                var url = "/uploads/" + fileName;
+                
+                // Hỗ trợ CKEditor 4 bằng callback HTML
+                if (!string.IsNullOrEmpty(CKEditorFuncNum))
+                {
+                    var msg = "Tải ảnh lên thành công";
+                    var script = $@"<script>window.parent.CKEDITOR.tools.callFunction({CKEditorFuncNum}, '{url}', '{msg}');</script>";
+                    return Content(script, "text/html");
+                }
+                
+                // Trả về JSON (cho CKEditor >= 4.5+ với filebrowserUploadMethod = 'xhr')
+                return Json(new { uploaded = 1, fileName = fileName, url = url });
+            }
+
+            if (!string.IsNullOrEmpty(CKEditorFuncNum))
+            {
+                var script = $@"<script>window.parent.CKEDITOR.tools.callFunction({CKEditorFuncNum}, '', 'Lỗi khi tải ảnh');</script>";
+                return Content(script, "text/html");
+            }
+
+            return Json(new { uploaded = 0, error = new { message = "Lỗi khi tải ảnh" } });
+        }
     }
 }

@@ -39,8 +39,13 @@ export const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (!product) return;
-    addToCart(product, quantity);
-    alert(`Đã thêm ${quantity} "${product.name}" vào giỏ hàng!`);
+    if (quantity > product.stockQuantity) {
+      alert("Số lượng sản phẩm trong kho không đủ!");
+      return;
+    }
+    if (addToCart(product, quantity)) {
+      alert(`Đã thêm ${quantity} "${product.name}" vào giỏ hàng!`);
+    }
   };
 
   if (loading) return <div className="container" style={{ padding: '60px 0', textAlign: 'center' }}>Đang tải chi tiết sản phẩm...</div>;
@@ -149,8 +154,13 @@ export const ProductDetail = () => {
             <button 
               onClick={() => {
                 if(!isOutOfStock) {
-                  addToCart(product, quantity);
-                  navigate('/checkout');
+                  if (quantity > product.stockQuantity) {
+                    alert("Số lượng sản phẩm trong kho không đủ!");
+                    return;
+                  }
+                  if (addToCart(product, quantity)) {
+                    navigate('/checkout');
+                  }
                 }
               }}
               disabled={isOutOfStock}

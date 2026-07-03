@@ -13,6 +13,7 @@
             <th>Giá</th>
             <th>Số lượng</th>
             <th>Danh mục</th>
+            <th>Ngày cập nhật</th>
             <th>Hình ảnh</th>
             <th></th>
         </tr>
@@ -26,6 +27,7 @@
                 <td>@item.Price.ToString("C")</td>
                 <td>@item.StockQuantity</td>
                 <td>@item.CategoryProduct?.Category?.Name</td>
+                <td>@(item.UpdatedDate.HasValue ? item.UpdatedDate.Value.ToString("dd/MM/yyyy HH:mm") : item.CreatedDate.ToString("dd/MM/yyyy HH:mm"))</td>
                 <td>
                     @if (!string.IsNullOrEmpty(item.ImageUrl))
                     {
@@ -40,3 +42,31 @@
         }
     </tbody>
 </table>
+
+@if (ViewBag.TotalPages > 1)
+{
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" asp-route-pg="@(ViewBag.CurrentPage - 1)">Trang trước</a>
+                </li>
+            }
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pg="@i">@i</a>
+                </li>
+            }
+
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" asp-route-pg="@(ViewBag.CurrentPage + 1)">Trang sau</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
